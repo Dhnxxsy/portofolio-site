@@ -305,279 +305,40 @@ body.loaded .project-media img{
   body{padding:2.5rem 2rem}
 }
 
+/* Non-intrusive mobile/desktop hardening (tampilan tetap sama) */
+@media (max-width:700px){
+  /* hindari overflow horizontal dan pastikan header rapi */
+  .header-inner{flex-wrap:wrap; gap:.75rem}
+  .navbar{flex-wrap:wrap}
+  .navbar a{padding:.42rem .7rem}
+  .site-main{padding:0 .5rem}
+  .projects-grid{gap:calc(var(--gap) * 0.9)}
+  /* caption panjang tidak memaksa layout melar */
+  .project-caption{word-wrap:break-word; overflow-wrap:anywhere}
+}
+
+/* Very small devices safeguard */
+@media (max-width:360px){
+  .navbar a{font-size:.9rem}
+  .project-caption{font-size:.9rem}
+}
+
+/* Safe-area insets (iOS notch) tanpa ubah tampilan desktop */
+@supports(padding:max(0px)){
+  body{
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
 /* Accessibility */
 a:focus{outline:3px solid rgba(124,92,255,0.16);outline-offset:4px}
 .project-card:focus-within{outline:2px solid rgba(255,255,255,0.03);outline-offset:6px}
 
-/* =========================
-   Elegant animated background (sederhana & performan)
-   - Hanya dua pseudo-elements (before/after)
-   - Mudah dikustom lewat variabel di atas
-   - Menghormati prefers-reduced-motion
-   ========================= */
-:root{
-  --blob-1: rgba(124,92,255,0.20);
-  --blob-2: rgba(0,212,255,0.12);
-  --blob-blur: 90px;
-  --blob-duration-a: 14s;
-  --blob-duration-b: 20s;
-}
 
-/* body siap menampung pseudo-elements */
-body {
-  position: relative;
-  overflow-x: hidden;
-}
 
-/* soft moving blob (kiri-atas) */
-body::before{
-  content: "";
-  position: fixed;
-  left: -20vw;
-  top: -15vh;
-  width: 70vmax;
-  height: 70vmax;
-  background: radial-gradient(circle at 30% 30%, var(--blob-1), transparent 45%);
-  filter: blur(var(--blob-blur));
-  opacity: 0.9;
-  pointer-events: none;
-  z-index: 0;
-  will-change: transform, opacity;
-  animation: blobA var(--blob-duration-a) ease-in-out infinite;
-}
 
-/* soft moving blob (kanan-atas) */
-body::after{
-  content: "";
-  position: fixed;
-  right: -15vw;
-  top: -10vh;
-  width: 50vmax;
-  height: 50vmax;
-  background: radial-gradient(circle at 70% 25%, var(--blob-2), transparent 48%);
-  filter: blur(calc(var(--blob-blur) * 0.8));
-  opacity: 0.85;
-  pointer-events: none;
-  z-index: 0;
-  will-change: transform, opacity;
-  animation: blobB var(--blob-duration-b) ease-in-out infinite;
-}
 
-/* gerakan halus */
-@keyframes blobA {
-  0%   { transform: translate3d(0,0,0) scale(1); opacity: 0.92; }
-  50%  { transform: translate3d(6vw,5vh,0) scale(1.03); opacity: 0.98; }
-  100% { transform: translate3d(0,0,0) scale(1); opacity: 0.92; }
-}
-@keyframes blobB {
-  0%   { transform: translate3d(0,0,0) scale(1); opacity: 0.88; }
-  50%  { transform: translate3d(-5vw,6vh,0) scale(1.02); opacity: 0.92; }
-  100% { transform: translate3d(0,0,0) scale(1); opacity: 0.88; }
-}
-
-/* matikan animasi bila user memilih reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  body::before,
-  body::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* Pastikan konten tetap di atas background */
-.header-inner,
-.site-main,
-.card,
-.project-card,
-.lightbox-panel {
-  position: relative;
-  z-index: 1;
-}
-
-/* Opsional: jika ingin pattern halus di atas background (non-intrusive) */
-/* uncomment jika mau:
-body::marker { ??? }  (tidak perlu diaktifkan default)
-*/
-
-/* Cara cepat kustom:
- - Ganti --bg-blob-1 / --bg-blob-2 / --bg-blob-3 di atas.
- - Ubah --blob-blur / --blob-duration-* untuk intensitas & kecepatan.
-*/
-
-/* =========================
-   Refined Elegant Background Blobs
-   - Lebih subtle: opacity rendah, blur besar
-   - Tidak menutupi konten: blobs di z-index:0, konten di z-index:2
-   - Posisi dioptimalkan agar tidak bertumpuk di area tengah
-   - Menghormati prefers-reduced-motion
-   ========================= */
-:root{
-  --blob-1: rgba(124,92,255,0.14); /* lebih lembut */
-  --blob-2: rgba(0,212,255,0.10);
-  --blob-blur: 110px;
-  --blob-duration-a: 16s;
-  --blob-duration-b: 22s;
-}
-
-/* Pastikan body sebagai reference */
-body{
-  position: relative;
-  overflow-x: hidden;
-}
-
-/* Blob kiri-atas (halus, jauh dari konten utama) */
-body::before{
-  content: "";
-  position: fixed;
-  left: -28vw;
-  top: -22vh;
-  width: 80vmax;
-  height: 80vmax;
-  background: radial-gradient(circle at 28% 28%, var(--blob-1), transparent 48%);
-  filter: blur(var(--blob-blur));
-  opacity: 0.12;
-  pointer-events: none;
-  z-index: 0;
-  will-change: transform, opacity;
-  animation: blobA var(--blob-duration-a) ease-in-out infinite;
-  mix-blend-mode: screen; /* halus blending tanpa menghasilkan warna saturasi berlebih */
-}
-
-/* Blob kanan-atas (halus, tidak menutupi header area) */
-body::after{
-  content: "";
-  position: fixed;
-  right: -22vw;
-  top: -12vh;
-  width: 60vmax;
-  height: 60vmax;
-  background: radial-gradient(circle at 72% 22%, var(--blob-2), transparent 50%);
-  filter: blur(calc(var(--blob-blur) * 0.85));
-  opacity: 0.10;
-  pointer-events: none;
-  z-index: 0;
-  will-change: transform, opacity;
-  animation: blobB var(--blob-duration-b) ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-
-/* Soft motion (subtle) */
-@keyframes blobA {
-  0%   { transform: translate3d(0,0,0) scale(1); }
-  50%  { transform: translate3d(5vw,4vh,0) scale(1.02); }
-  100% { transform: translate3d(0,0,0) scale(1); }
-}
-@keyframes blobB {
-  0%   { transform: translate3d(0,0,0) scale(1); }
-  50%  { transform: translate3d(-5vw,5vh,0) scale(1.01); }
-  100% { transform: translate3d(0,0,0) scale(1); }
-}
-
-/* Respect user preference for reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  body::before,
-  body::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* Pastikan konten jauh di atas blobs */
-.header-inner,
-.site-main,
-.card,
-project-card,
-.lightbox-panel {
-  position: relative;
-  z-index: 2;
-}
-
-/* =========================
-   Background override — blob-only, halus & menutupi area tengah
-   Paste di akhir file untuk menimpa background/puing sebelumnya
-   ========================= */
-:root{
-  --bg-base: #040517;
-  --blob-a: rgba(124,92,255,0.14);
-  --blob-b: rgba(0,212,255,0.10);
-  --blob-blur-large: 140px;
-  --blob-duration-a: 18s;
-  --blob-duration-b: 26s;
-}
-
-/* gelap sebagai base (menghilangkan gradient biru pekat) */
-body{
-  background: var(--bg-base) !important;
-  position: relative;
-  overflow-x: hidden;
-}
-
-/* Blob kiri-atas — sangat besar agar menutup area tengah */
-body::before{
-  content: "";
-  position: fixed;
-  left: -40vw;
-  top: -30vh;
-  width: 160vmax;
-  height: 120vmax;
-  background: radial-gradient(circle at 30% 30%, var(--blob-a), transparent 45%);
-  filter: blur(var(--blob-blur-large));
-  opacity: 0.12;
-  pointer-events: none;
-  z-index: 0;
-  will-change: transform, opacity;
-  animation: blobA var(--blob-duration-a) ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-
-/* Blob kanan-atas — besar & lembut, tidak menumpuk di tengah */
-body::after{
-  content: "";
-  position: fixed;
-  right: -40vw;
-  top: -10vh;
-  width: 140vmax;
-  height: 110vmax;
-  background: radial-gradient(circle at 70% 20%, var(--blob-b), transparent 48%);
-  filter: blur(calc(var(--blob-blur-large) * 0.85));
-  opacity: 0.10;
-  pointer-events: none;
-  z-index: 0;
-  will-change: transform, opacity;
-  animation: blobB var(--blob-duration-b) ease-in-out infinite;
-  mix-blend-mode: screen;
-}
-
-/* gerakan halus */
-@keyframes blobA {
-  0%   { transform: translate3d(0,0,0) scale(1); }
-  50%  { transform: translate3d(4vw,3vh,0) scale(1.02); }
-  100% { transform: translate3d(0,0,0) scale(1); }
-}
-@keyframes blobB {
-  0%   { transform: translate3d(0,0,0) scale(1); }
-  50%  { transform: translate3d(-4vw,4vh,0) scale(1.015); }
-  100% { transform: translate3d(0,0,0) scale(1); }
-}
-
-/* pastikan konten ada di atas blobs */
-.header-inner,
-.site-main,
-.card,
-project-card,
-.lightbox-panel {
-  position: relative;
-  z-index: 2;
-}
-
-/* hormati prefer-reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-  body::before,
-  body::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}
 
 /* =========================
    Clean single background block
@@ -667,14 +428,14 @@ body::after{
 .header-inner,
 .site-main,
 .card,
-project-card,
+.project-card,
 .lightbox-panel {
   position: relative;
   z-index: 2;
 }
 
 /* Section titles entrance (fade + lift) */
-.section-subtitle{
+.section-subtitle {
   opacity: 0;
   transform: translateY(8px) scale(.995);
   will-change: transform, opacity;
@@ -791,7 +552,18 @@ body.loaded .section-subtitle{
   border-radius: 999px;
   font-size: 25px;
   text-shadow: 0 1px 0 rgba(0,0,0,0.18); /* opsional: sedikit kontras */
+  display: inline-block; /* agar gradien tidak melebar full */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .5s ease-out, transform .5s ease-out;
 }
+
+
+body.loaded .subtitle-grad {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* fallback: pastikan general centered subsection style tetap tidak terpengaruh */
 #results > .projects-subsection:not(:first-of-type) {
   justify-content: center;
