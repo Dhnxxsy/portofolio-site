@@ -9,7 +9,7 @@
   <!-- Preconnect to speed up font fetching -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css" />
   <style>
@@ -194,14 +194,13 @@
     <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Preview image">
       <button class="lightbox-close" aria-label="Tutup">&times;</button>
 
-      <!-- prev / next -->
-      <button class="lightbox-nav lightbox-prev" aria-label="Sebelumnya"></button>
-      <button class="lightbox-nav lightbox-next" aria-label="Berikutnya"></button>
-
       <div class="lightbox-body">
         <!-- slider: track akan diisi oleh JS -->
         <div class="lightbox-slider">
           <div class="lightbox-track" role="list"></div>
+          <!-- prev / next now inside slider so buttons center to image -->
+          <button class="lightbox-nav lightbox-prev" aria-label="Sebelumnya"></button>
+          <button class="lightbox-nav lightbox-next" aria-label="Berikutnya"></button>
         </div>
 
         <div class="lightbox-info">

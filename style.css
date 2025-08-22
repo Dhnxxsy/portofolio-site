@@ -16,7 +16,8 @@
   --trans-med: 450ms;
   --hover-dark: rgba(0,0,0,0.55);
   --shine-color: rgba(255,255,255,0.12);
-  --shadow-strong: 0 18px 44px rgba(2,6,23,0.45);
+  /* slightly lighter shadow to reduce repaint cost */
+  --shadow-strong: 0 12px 30px rgba(2,6,23,0.35);
 }
 
 /* Global anti-overflow (tanpa ubah tampilan) */
@@ -223,7 +224,7 @@ body.loaded .project-media img{
 .lightbox-panel{position:relative;max-width:1100px;width:100%;z-index:2}
 .lightbox-close{position:absolute;right:-6px;top:-6px;background:rgba(227, 227, 227, 0.92);border:0;color:#000000;width:40px;height:40px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
 .lightbox-body { display: grid; grid-template-columns: 1fr 360px; gap: 18px; padding: 18px; border-radius: 12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
-.lightbox-slider { position: relative; overflow: hidden; border-radius: 10px; background: rgba(0,0,0,0.04); min-height: 320px; display:flex; align-items:center; justify-content:center; }
+.lightbox-slider { position: relative; overflow: hidden; border-radius: 10px; background: rgba(0,0,0,0.04); min-height: 320px; display:flex; align-items:center; justify-content:center; margin-bottom: 10px; }
 .lightbox-track { display:flex; width:100%; height:100%; transition: transform .36s cubic-bezier(.2,.9,.2,1); }
 .lightbox-track .slide { flex: 0 0 100%; display:grid; place-items:center; padding:12px; box-sizing:border-box; }
 .lightbox-track .slide img { width:100%; height:100%; object-fit:contain; border-radius:8px; max-height:70vh; }
@@ -233,19 +234,17 @@ body.loaded .project-media img{
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 5;
-  width: 44px;
-  height: 44px;
+  width: 44px; height: 44px;
   border-radius: 10px;
   border: 0;
-  /* fixed background color */
   background: rgba(227, 227, 227, 0.92);
-  color: #000000;
-  font-size: 24px;
+  backdrop-filter: blur(2px);
   display: grid;
   place-items: center;
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
   cursor: pointer;
   box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+  z-index: 3; /* pastikan di atas gambar */
 }
 .lightbox-prev { left: 8px; }
 .lightbox-next { right: 8px; }
@@ -264,18 +263,19 @@ body.loaded .project-media img{
 .lightbox-prev::before{ border-right: 12px solid #000000; margin-left: -2px; }
 .lightbox-next::before{ border-left: 12px solid #000000; margin-left: 2px; }
 
-.lightbox-info{display:flex;flex-direction:column;gap:10px}
-.lightbox-title{margin:0;color:var(--text);font-size:1.05rem}
+.lightbox-info{display:flex;flex-direction:column;gap:10px; position:relative; z-index:2}
+.lightbox-title{margin:0;color:var(--text);font-size:1.08rem}
 .lightbox-desc{
   min-height:120px;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid rgba(255,255,255,0.04);
-  background:rgba(0,0,0,0.12);
-  color:var(--text);
+  padding:12px 14px;
+  border-radius:10px;
+  background: rgba(2,6,23,0.72);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--text);
+  line-height: 1.6;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
   overflow:auto;
   white-space:pre-wrap;
-  line-height:1.4;
 }
 
 /* pastikan .cta adalah tombol yang tampak & keyboard-friendly */
@@ -313,9 +313,12 @@ body.loaded .project-media img{
 }
 
 @media (max-width:900px){
-  .lightbox-body{grid-template-columns:1fr;max-height:80vh;overflow:auto}
+  .lightbox-body{grid-template-columns:1fr;max-height:82vh;overflow:auto; padding: 14px}
   .lightbox-info{order:2}
-  .lightbox-image{max-height:50vh}
+  .lightbox-slider{max-height:60vh}
+  .lightbox-track .slide img{max-height:58vh}
+  .lightbox-title{font-size:1.02rem}
+  .lightbox-desc{min-height:unset}
 }
 
 /* Responsive */
@@ -420,9 +423,10 @@ a:focus{outline:3px solid rgba(124,92,255,0.16);outline-offset:4px}
   --bg-blob-1: rgba(124,92,255,0.12);
   --bg-blob-2: rgba(0,212,255,0.08);
 
-  --bg-blob-blur: 120px;
-  --bg-blob-dur-a: 18s;
-  --bg-blob-dur-b: 26s;
+  /* reduce blur and slow animations a bit for smoother scrolling */
+  --bg-blob-blur: 80px;
+  --bg-blob-dur-a: 28s;
+  --bg-blob-dur-b: 36s;
   --bg-ease: cubic-bezier(.2,.9,.2,1);
 }
 
@@ -433,7 +437,7 @@ body{
     radial-gradient(circle at 12% 14%, rgba(125, 92, 255, 0.593), transparent 18%),
     radial-gradient(circle at 88% 30%, rgba(0, 213, 255, 0.378), transparent 20%),
     linear-gradient(180deg, var(--bg-shade-top), var(--bg-bottom-shade));
-  background-attachment: fixed;
+  background-attachment: scroll; /* reduce scroll jank on some GPUs */
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
@@ -549,7 +553,7 @@ body::after{
   will-change: transform, opacity;
   filter: blur(var(--bg-blob-blur));
   mix-blend-mode: screen;
-  opacity: 0.10;
+  opacity: 0.07; /* a bit lighter for GPU */
 }
 
 /* left / top blob */
@@ -574,14 +578,14 @@ body::after{
 
 /* Gentle movement */
 @keyframes bgBlobA{
-  0%   { transform: translate3d(0,0,0) scale(1); opacity:0.095; }
-  50%  { transform: translate3d(4vw,3vh,0) scale(1.02); opacity:0.12; }
-  100% { transform: translate3d(0,0,0) scale(1); opacity:0.095; }
+  0%   { transform: translate3d(0,0,0) scale(1); opacity:0.07; }
+  50%  { transform: translate3d(3vw,2.5vh,0) scale(1.015); opacity:0.09; }
+  100% { transform: translate3d(0,0,0) scale(1); opacity:0.07; }
 }
 @keyframes bgBlobB{
-  0%   { transform: translate3d(0,0,0) scale(1); opacity:0.09; }
-  50%  { transform: translate3d(-4vw,4vh,0) scale(1.015); opacity:0.11; }
-  100% { transform: translate3d(0,0,0) scale(1); opacity:0.09; }
+  0%   { transform: translate3d(0,0,0) scale(1); opacity:0.065; }
+  50%  { transform: translate3d(-3vw,3vh,0) scale(1.012); opacity:0.085; }
+  100% { transform: translate3d(0,0,0) scale(1); opacity:0.065; }
 }
 
 /* Respect reduced-motion */
