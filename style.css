@@ -466,6 +466,9 @@ body{
   aspect-ratio: 1 / 1; /* jaga rasio 1:1 agar bulat sempurna */
   border-radius:50%;
   display:inline-block; /* hindari anomali layout pada picture */
+  flex: 0 0 auto; /* cegah mengecil di flex container (mobile) */
+  min-width: 56px; /* pastikan tidak menjadi oval saat menyempit */
+  min-height: 56px;
   line-height: 0; /* hilangkan whitespace internal */
   background: linear-gradient(135deg, #7c5cff 0%, #00d4ff 100%);
   box-shadow: 0 8px 24px rgba(0,0,0,.35);
@@ -528,7 +531,7 @@ body{
 
 @media (min-width: 720px){
   .contact-card{ padding: 20px; gap: 18px }
-  .avatar{ width: 64px; height:64px; }
+  .avatar{ width: 64px; height:64px; min-width:64px; min-height:64px; }
   .contact-title{ font-size:1.15rem }
 }
 
