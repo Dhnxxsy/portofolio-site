@@ -71,6 +71,8 @@ img{max-width:100%;height:auto;display:block}
   /* Perf: delay rendering offscreen cards (tanpa ubah tampilan) */
   content-visibility:auto;
   contain-intrinsic-size: 320px 420px; /* perkiraan tinggi untuk menghindari layout shift besar */
+  /* Batasi dampak repaint di sekitar kartu */
+  contain: layout paint;
 }
 
 /* Project media container (image wrapper) */
@@ -249,6 +251,19 @@ body.loaded .project-media img{
 .lightbox-next { right: 8px; }
 .lightbox-nav:hover { transform: translateY(-50%) scale(1.04); background:rgba(216, 216, 216, 0.745); }
 
+/* Arrow icons via CSS triangles (no text, avoids mojibake) */
+.lightbox-nav::before{
+  content: "";
+  display: block;
+  width: 0; height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  /* keep centered inside grid button */
+  pointer-events: none;
+}
+.lightbox-prev::before{ border-right: 12px solid #000000; margin-left: -2px; }
+.lightbox-next::before{ border-left: 12px solid #000000; margin-left: 2px; }
+
 .lightbox-info{display:flex;flex-direction:column;gap:10px}
 .lightbox-title{margin:0;color:var(--text);font-size:1.05rem}
 .lightbox-desc{
@@ -314,6 +329,15 @@ body.loaded .project-media img{
 
 /* Non-intrusive mobile/desktop hardening (tampilan tetap sama) */
 @media (max-width:700px){
+  /* Matikan background-attachment fixed di mobile (mengurangi repaint jank) */
+  body{ background-attachment: scroll; background-position: center top; }
+  /* Kurangi beban blob background: blur lebih kecil, blend normal, opasitas diturunkan */
+  body::before, body::after{
+    filter: blur(calc(var(--bg-blob-blur) * .6));
+    mix-blend-mode: normal;
+    opacity: .08;
+    will-change: auto;
+  }
   /* hindari overflow horizontal dan pastikan header rapi */
   .header-inner{flex-wrap:wrap; gap:.75rem}
   .navbar{flex-wrap:wrap}
@@ -325,6 +349,8 @@ body.loaded .project-media img{
   /* Lightbox lebih sempit di mobile agar tidak overflow */
   .lightbox-panel{width:100%}
   .lightbox-body{grid-template-columns:1fr}
+  /* Kurangi shadow berat pada tombol lightbox */
+  .lightbox-nav, .lightbox-close{ box-shadow: 0 6px 18px rgba(0,0,0,.35); }
 }
 
 /* Mobile performance tuning tanpa mengubah tampilan akhir */
@@ -337,6 +363,24 @@ body.loaded .project-media img{
   .project-media img{ transition: none; }
   /* backdrop blur berat diganti solid untuk performa */
   .lightbox-backdrop{ backdrop-filter:none; background:rgba(2,6,23,0.82) }
+  /* Non-essential text entrance transitions dimatikan */
+  .section-subtitle{ transition: none; }
+  .subtitle-grad{ transition: none; }
+}
+
+@media (hover: none){
+  /* Matikan efek hover yang berat pada perangkat touch */
+  .navbar a:hover{ background:inherit; transform:none }
+  .project-card:hover,
+  .project-card:focus-within{ transform:none; box-shadow:none }
+  .project-card:hover .project-media img,
+  .project-card:focus-within .project-media img{ transform:none; filter:none }
+  .project-card:hover .project-media::after,
+  .project-card:focus-within .project-media::after{ opacity:0 }
+  .project-card:hover .project-media .shine,
+  .project-card:focus-within .project-media .shine{ opacity:0; animation:none }
+  .project-card:hover .cta,
+  .project-card:focus-within .cta{ transform:translate(-50%,-50%) scale(1); box-shadow:none }
 }
 
 /* Very small devices safeguard */
@@ -401,6 +445,92 @@ body{
 
 /* Contact text wrapping agar tidak memicu horizontal scroll */
 #contact p{ overflow-wrap:anywhere; word-break:break-word }
+
+/* Contact section styling */
+#contact {
+  margin-top: 1rem;
+}
+
+.contact-card{
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.contact-header{ display:flex; align-items:center; gap:12px; }
+.avatar{
+  width: 56px; height:56px; /* sedikit lebih besar agar terlihat rapi */
+  aspect-ratio: 1 / 1; /* jaga rasio 1:1 agar bulat sempurna */
+  border-radius:50%;
+  display:inline-block; /* hindari anomali layout pada picture */
+  line-height: 0; /* hilangkan whitespace internal */
+  background: linear-gradient(135deg, #7c5cff 0%, #00d4ff 100%);
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  overflow: hidden; /* pastikan gambar terpotong dalam lingkaran */
+}
+.avatar img{ width:100%; height:100%; object-fit:cover; object-position:50% 7%; display:block; border-radius:inherit }
+.contact-text{ display:flex; flex-direction:column; gap:2px }
+.contact-title{ margin:0; font-size:1.05rem; color:var(--text) }
+.contact-subtitle{ margin:0; color:var(--muted); font-size:.95rem }
+
+.contact-lead{ color:var(--text); opacity:.9; line-height:1.6 }
+
+.contact-actions{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .6rem 1.05rem;
+  border-radius: 999px;
+  font-weight: 700;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+.btn:active{ transform: translateY(1px) }
+
+.btn-primary{
+  background: linear-gradient(90deg,var(--accent),var(--accent-2));
+  color: #021022;
+  box-shadow: 0 12px 30px rgba(124,92,255,0.18), 0 6px 18px rgba(0,0,0,0.35);
+}
+.btn-primary:hover{
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 16px 36px rgba(124,92,255,0.22), 0 8px 22px rgba(0,0,0,0.42);
+}
+
+.btn-ghost{
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.btn-ghost:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 8px 22px rgba(0,0,0,.3);
+}
+
+.contact-info{
+  color: var(--muted);
+  text-decoration: none;
+}
+.contact-info a{ color: inherit; text-decoration: underline dotted }
+
+@media (min-width: 720px){
+  .contact-card{ padding: 20px; gap: 18px }
+  .avatar{ width: 64px; height:64px; }
+  .contact-title{ font-size:1.15rem }
+}
 
 /* Two large, soft animated blobs via pseudo-elements */
 body::before,

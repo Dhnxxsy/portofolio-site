@@ -48,7 +48,11 @@ console.info('script.js: cleaned duplicates/unused handlers (non-destructive).')
   let currentIndex = 0;
   function buildSlides(items){
     if(!track) return;
-    track.innerHTML = items.map(it => `<div class="slide" role="listitem"><img src="${it.src}" alt="${it.alt||''}"></div>`).join('');
+    // Perf: gunakan decoding async; slide non-aktif lazy-load untuk kurangi beban awal
+    track.innerHTML = items.map((it, idx) => {
+      const lazy = idx === 0 ? '' : ' loading="lazy"';
+      return `<div class="slide" role="listitem"><img src="${it.src}" alt="${it.alt||''}" decoding="async"${lazy}></div>`;
+    }).join('');
   }
   function showIndex(i, animate = true){
     if(!track || !currentGroup.length) return;
@@ -143,12 +147,40 @@ console.info('script.js: cleaned duplicates/unused handlers (non-destructive).')
   function applyEntrance(){
     $$('.projects-grid .project-card').forEach((c,i)=> c.style.setProperty('--i', String(i)));
     $$('.section-subtitle').forEach((t,i)=> t.style.setProperty('--i', String(i)));
-    window.addEventListener('load', ()=> setTimeout(()=> document.body.classList.add('loaded'), 120));
-    setTimeout(()=> document.body.classList.add('loaded'), 900);
+    // Hindari trigger ganda yang bisa memicu repaint/relayout dua kali
+    const addLoaded = ()=>{ document.body.classList.add('loaded'); };
+    if(document.readyState === 'complete'){
+      // halaman sudah selesai, beri sedikit delay agar lebih halus
+      setTimeout(addLoaded, 120);
+    } else {
+      window.addEventListener('load', ()=> setTimeout(addLoaded, 120), { once:true });
+    }
   }
 
   document.addEventListener('DOMContentLoaded', ()=>{
     applyEntrance();
     attachLightbox();
+
+    // Ensure Email button directs to Gmail compose, with mailto fallback
+    const emailBtn = document.getElementById('emailBtn');
+    if(emailBtn){
+      const gmailUrl = 'https://mail.google.com/mail/u/0/?view=cm&fs=1&to=ragakalasramadhan27@gmail.com&su=Collaboration%20Inquiry&body=Hi%20Raga%2C%0A%0A';
+      const mailtoUrl = 'mailto:ragakalasramadhan27@gmail.com?subject=Collaboration%20Inquiry&body=Hi%20Raga%2C%0A%0A';
+      emailBtn.addEventListener('click', (e)=>{
+        e.preventDefault();
+        try {
+          // Try navigate to Gmail compose in same tab
+          window.location.assign(gmailUrl);
+          // If navigation is blocked or Gmail not available, fallback after a moment
+          setTimeout(()=>{
+            // If still on the page, try mailto
+            if(!document.hidden) window.location.href = mailtoUrl;
+          }, 1200);
+        } catch(err){
+          // Fallback immediately
+          window.location.href = mailtoUrl;
+        }
+      });
+    }
   });
 })();
