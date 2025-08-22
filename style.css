@@ -1,0 +1,810 @@
+/* =========================
+   Clean & fixed CSS
+   ========================= */
+:root{
+  --bg-top: #071024;
+  --bg-bottom: #0b1830;
+  --card-bg: rgba(255,255,255,0.03);
+  --accent: #7c5cff;
+  --accent-2: #00d4ff;
+  --text: #e8eefc;
+  --muted: #b8c2d8;
+  --radius: 12px;
+  --gap: 1rem;
+  --max-w: 1100px;
+  --trans-fast: 220ms;
+  --trans-med: 450ms;
+  --hover-dark: rgba(0,0,0,0.55);
+  --shine-color: rgba(255,255,255,0.12);
+  --shadow-strong: 0 18px 44px rgba(2,6,23,0.45);
+}
+
+/* Reset & base */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  padding:2rem 1rem;
+  line-height:1.45;
+}
+.container{max-width:var(--max-w);margin:0 auto}
+a{color:inherit;text-decoration:none}
+
+/* NOTE: jangan beri border-radius global ke semua img.
+   Hanya beri pada gambar di kartu agar grid tetap rapi. */
+img{max-width:100%;height:auto;display:block}
+
+/* Header */
+.header-con{width:100%;padding:.6rem 0}
+.header-inner{max-width:var(--max-w);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0 0.5rem}
+.brand{display:flex;flex-direction:column}
+.portofolio{font-family:Poppins, Inter;font-size:clamp(1.8rem,4.6vw,2.8rem);background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtext{color:var(--muted);font-size:0.95rem}
+.navbar{display:flex;gap:.5rem;align-items:center}
+.navbar a{padding:.45rem .75rem;border-radius:999px;background:transparent;border:1px solid transparent;color:var(--text);font-weight:600;transition:all var(--trans-fast)}
+.navbar a:hover{background:rgba(255,255,255,0.04);transform:translateY(-2px)}
+
+/* Main content container */
+.site-main{max-width:var(--max-w);margin:1.5rem auto;display:grid;gap:1rem;padding:0 0.5rem}
+
+/* Sections */
+.section{padding:0;}
+.card{background:var(--card-bg);border-radius:var(--radius);padding:1rem;border:1px solid rgba(255,255,255,0.05)}
+
+/* Projects grid */
+.projects-grid{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+
+/* Project card base */
+.project-card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:10px;
+  overflow:visible;
+  transition:transform var(--trans-fast) ease, box-shadow var(--trans-fast) ease;
+  display:block;
+}
+
+/* Project media container (image wrapper) */
+.project-media{
+  position:relative;
+  overflow:hidden;
+  border-radius:10px;
+  background:linear-gradient(135deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));
+}
+
+/* Image inside project media gets radius to match wrapper */
+.project-media img{ border-radius:10px; display:block; width:100%; height:auto; transition: transform var(--trans-med) cubic-bezier(.2,.9,.2,1), filter 300ms; transform-origin:center center; }
+
+/* overlay that darkens image on hover */
+.project-media::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, var(--hover-dark) 100%);
+  opacity:0;
+  transition:opacity 260ms ease;
+  pointer-events:none;
+}
+
+/* shine element (optional) */
+.project-media .shine{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(90deg, transparent 0%, var(--shine-color) 45%, transparent 60%);
+  transform: translateX(-120%) rotate(8deg);
+  opacity:0;
+  transition:opacity 260ms ease;
+}
+
+/* CTA button centered */
+.project-media .cta{
+  position:absolute;
+  left:50%; top:50%;
+  transform:translate(-50%,-50%) scale(.95);
+  background: linear-gradient(90deg,var(--accent),var(--accent-2));
+  color:#021022;
+  padding:.5rem .85rem;
+  border-radius:999px;
+  font-weight:700;
+  font-size:.95rem;
+  opacity:0;
+  box-shadow:var(--shadow-strong);
+  transition: transform 220ms ease, opacity 220ms ease;
+  pointer-events:none;
+}
+
+/* Hover / focus effects - cleaned */
+.project-card:hover,
+.project-card:focus-within{
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-strong);
+}
+.project-card:hover .project-media img,
+.project-card:focus-within .project-media img{
+  transform: scale(1.04);
+  filter: brightness(.7) saturate(.95);
+}
+.project-card:hover .project-media::after,
+.project-card:focus-within .project-media::after{
+  opacity:1;
+}
+.project-card:hover .project-media .shine,
+.project-card:focus-within .project-media .shine{
+  opacity:1;
+  animation: sweep 900ms linear;
+}
+.project-card:hover .project-media .cta,
+.project-card:focus-within .project-media .cta{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+  pointer-events:auto;
+}
+
+/* Entrance animation for project grid (staggered reveal) */
+:root{
+  --enter-ease: cubic-bezier(.2,.9,.2,1);
+  --enter-stagger: 80ms;
+  --enter-duration: 560ms;
+}
+
+/* initial (hidden) state */
+.project-card{
+  opacity: 0;
+  transform: translateY(18px) scale(.995);
+  will-change: transform, opacity;
+  transition: opacity var(--enter-duration) var(--enter-ease),
+              transform var(--enter-duration) var(--enter-ease);
+  /* per-card delay controlled by inline --i (set by JS) */
+  transition-delay: calc(var(--i, 0) * var(--enter-stagger));
+}
+
+/* revealed state when body has .loaded */
+body.loaded .project-card{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* stagger caption slightly after card */
+.project-caption{
+  transition: opacity 320ms var(--enter-ease), transform 320ms var(--enter-ease);
+  opacity: 0;
+  transform: translateY(6px);
+  transition-delay: calc(var(--i, 0) * var(--enter-stagger) + 80ms);
+}
+body.loaded .project-caption{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* subtle image lift on reveal for depth */
+.project-media img{
+  transform-origin: center center;
+  transition: transform var(--enter-duration) var(--enter-ease);
+  /* start slightly zoomed out so reveal can settle to normal */
+  transform: scale(1.01);
+  transition-delay: calc(var(--i, 0) * var(--enter-stagger) + 20ms);
+}
+body.loaded .project-media img{
+  transform: scale(1);
+}
+
+/* Sweep animation */
+@keyframes sweep{
+  0% { transform: translateX(-120%) rotate(8deg); opacity:0; }
+  60% { transform: translateX(120%) rotate(8deg); opacity:1; }
+  100% { transform: translateX(240%) rotate(8deg); opacity:0; }
+}
+
+/* Caption below card */
+.project-caption{
+  padding:.6rem .8rem;
+  color: var(--muted);
+  font-size:.95rem;
+  text-align:center;
+  margin-top:.6rem;
+}
+
+/* ========== Lightbox / Modal ========== */
+.lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.lightbox[aria-hidden="false"]{display:flex}
+.lightbox-backdrop{position:absolute;inset:0;background:rgba(2,6,23,0.7);backdrop-filter:blur(4px)}
+.lightbox-panel{position:relative;max-width:1100px;width:100%;z-index:2}
+.lightbox-close{position:absolute;right:-6px;top:-6px;background:rgba(227, 227, 227, 0.92);border:0;color:#000000;width:40px;height:40px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.6)}
+.lightbox-body { display: grid; grid-template-columns: 1fr 360px; gap: 18px; padding: 18px; border-radius: 12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); }
+.lightbox-slider { position: relative; overflow: hidden; border-radius: 10px; background: rgba(0,0,0,0.04); min-height: 320px; display:flex; align-items:center; justify-content:center; }
+.lightbox-track { display:flex; width:100%; height:100%; transition: transform .36s cubic-bezier(.2,.9,.2,1); }
+.lightbox-track .slide { flex: 0 0 100%; display:grid; place-items:center; padding:12px; box-sizing:border-box; }
+.lightbox-track .slide img { width:100%; height:100%; object-fit:contain; border-radius:8px; max-height:70vh; }
+
+/* nav buttons */
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 0;
+  /* fixed background color */
+  background: rgba(227, 227, 227, 0.92);
+  color: #000000;
+  font-size: 24px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+}
+.lightbox-prev { left: 8px; }
+.lightbox-next { right: 8px; }
+.lightbox-nav:hover { transform: translateY(-50%) scale(1.04); background:rgba(216, 216, 216, 0.745); }
+
+.lightbox-info{display:flex;flex-direction:column;gap:10px}
+.lightbox-title{margin:0;color:var(--text);font-size:1.05rem}
+.lightbox-desc{
+  min-height:120px;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.04);
+  background:rgba(0,0,0,0.12);
+  color:var(--text);
+  overflow:auto;
+  white-space:pre-wrap;
+  line-height:1.4;
+}
+
+/* pastikan .cta adalah tombol yang tampak & keyboard-friendly */
+.cta{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) scale(.95);
+  background: linear-gradient(90deg,var(--accent),var(--accent-2));
+  color:#021022;
+  padding:.55rem .9rem;
+  border-radius:999px;
+  font-weight:700;
+  font-size:.95rem;
+  opacity:0;
+  box-shadow:var(--shadow-strong);
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease, box-shadow 220ms ease;
+  pointer-events:none;
+  border:0;
+  cursor:pointer;
+}
+
+/* tampilan tombol saat hover/focus langsung pada tombol */
+.cta:hover{
+  transform:translate(-50%,-50%) scale(1.06);
+  box-shadow: 0 14px 40px rgba(124,92,255,0.18), 0 6px 18px rgba(0,0,0,0.45);
+}
+
+/* tampilkan tombol saat hover/focus pada kartu */
+.project-card:hover .cta,
+.project-card:focus-within .cta{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+  pointer-events:auto;
+}
+
+@media (max-width:900px){
+  .lightbox-body{grid-template-columns:1fr;max-height:80vh;overflow:auto}
+  .lightbox-info{order:2}
+  .lightbox-image{max-height:50vh}
+}
+
+/* Responsive */
+@media (min-width:640px){
+  .projects-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (min-width:992px){
+  .projects-grid{grid-template-columns:repeat(3,1fr)}
+  body{padding:2.5rem 2rem}
+}
+
+/* Accessibility */
+a:focus{outline:3px solid rgba(124,92,255,0.16);outline-offset:4px}
+.project-card:focus-within{outline:2px solid rgba(255,255,255,0.03);outline-offset:6px}
+
+/* =========================
+   Elegant animated background (sederhana & performan)
+   - Hanya dua pseudo-elements (before/after)
+   - Mudah dikustom lewat variabel di atas
+   - Menghormati prefers-reduced-motion
+   ========================= */
+:root{
+  --blob-1: rgba(124,92,255,0.20);
+  --blob-2: rgba(0,212,255,0.12);
+  --blob-blur: 90px;
+  --blob-duration-a: 14s;
+  --blob-duration-b: 20s;
+}
+
+/* body siap menampung pseudo-elements */
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* soft moving blob (kiri-atas) */
+body::before{
+  content: "";
+  position: fixed;
+  left: -20vw;
+  top: -15vh;
+  width: 70vmax;
+  height: 70vmax;
+  background: radial-gradient(circle at 30% 30%, var(--blob-1), transparent 45%);
+  filter: blur(var(--blob-blur));
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  animation: blobA var(--blob-duration-a) ease-in-out infinite;
+}
+
+/* soft moving blob (kanan-atas) */
+body::after{
+  content: "";
+  position: fixed;
+  right: -15vw;
+  top: -10vh;
+  width: 50vmax;
+  height: 50vmax;
+  background: radial-gradient(circle at 70% 25%, var(--blob-2), transparent 48%);
+  filter: blur(calc(var(--blob-blur) * 0.8));
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  animation: blobB var(--blob-duration-b) ease-in-out infinite;
+}
+
+/* gerakan halus */
+@keyframes blobA {
+  0%   { transform: translate3d(0,0,0) scale(1); opacity: 0.92; }
+  50%  { transform: translate3d(6vw,5vh,0) scale(1.03); opacity: 0.98; }
+  100% { transform: translate3d(0,0,0) scale(1); opacity: 0.92; }
+}
+@keyframes blobB {
+  0%   { transform: translate3d(0,0,0) scale(1); opacity: 0.88; }
+  50%  { transform: translate3d(-5vw,6vh,0) scale(1.02); opacity: 0.92; }
+  100% { transform: translate3d(0,0,0) scale(1); opacity: 0.88; }
+}
+
+/* matikan animasi bila user memilih reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Pastikan konten tetap di atas background */
+.header-inner,
+.site-main,
+.card,
+.project-card,
+.lightbox-panel {
+  position: relative;
+  z-index: 1;
+}
+
+/* Opsional: jika ingin pattern halus di atas background (non-intrusive) */
+/* uncomment jika mau:
+body::marker { ??? }  (tidak perlu diaktifkan default)
+*/
+
+/* Cara cepat kustom:
+ - Ganti --bg-blob-1 / --bg-blob-2 / --bg-blob-3 di atas.
+ - Ubah --blob-blur / --blob-duration-* untuk intensitas & kecepatan.
+*/
+
+/* =========================
+   Refined Elegant Background Blobs
+   - Lebih subtle: opacity rendah, blur besar
+   - Tidak menutupi konten: blobs di z-index:0, konten di z-index:2
+   - Posisi dioptimalkan agar tidak bertumpuk di area tengah
+   - Menghormati prefers-reduced-motion
+   ========================= */
+:root{
+  --blob-1: rgba(124,92,255,0.14); /* lebih lembut */
+  --blob-2: rgba(0,212,255,0.10);
+  --blob-blur: 110px;
+  --blob-duration-a: 16s;
+  --blob-duration-b: 22s;
+}
+
+/* Pastikan body sebagai reference */
+body{
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Blob kiri-atas (halus, jauh dari konten utama) */
+body::before{
+  content: "";
+  position: fixed;
+  left: -28vw;
+  top: -22vh;
+  width: 80vmax;
+  height: 80vmax;
+  background: radial-gradient(circle at 28% 28%, var(--blob-1), transparent 48%);
+  filter: blur(var(--blob-blur));
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  animation: blobA var(--blob-duration-a) ease-in-out infinite;
+  mix-blend-mode: screen; /* halus blending tanpa menghasilkan warna saturasi berlebih */
+}
+
+/* Blob kanan-atas (halus, tidak menutupi header area) */
+body::after{
+  content: "";
+  position: fixed;
+  right: -22vw;
+  top: -12vh;
+  width: 60vmax;
+  height: 60vmax;
+  background: radial-gradient(circle at 72% 22%, var(--blob-2), transparent 50%);
+  filter: blur(calc(var(--blob-blur) * 0.85));
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  animation: blobB var(--blob-duration-b) ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* Soft motion (subtle) */
+@keyframes blobA {
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(5vw,4vh,0) scale(1.02); }
+  100% { transform: translate3d(0,0,0) scale(1); }
+}
+@keyframes blobB {
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(-5vw,5vh,0) scale(1.01); }
+  100% { transform: translate3d(0,0,0) scale(1); }
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Pastikan konten jauh di atas blobs */
+.header-inner,
+.site-main,
+.card,
+project-card,
+.lightbox-panel {
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================
+   Background override — blob-only, halus & menutupi area tengah
+   Paste di akhir file untuk menimpa background/puing sebelumnya
+   ========================= */
+:root{
+  --bg-base: #040517;
+  --blob-a: rgba(124,92,255,0.14);
+  --blob-b: rgba(0,212,255,0.10);
+  --blob-blur-large: 140px;
+  --blob-duration-a: 18s;
+  --blob-duration-b: 26s;
+}
+
+/* gelap sebagai base (menghilangkan gradient biru pekat) */
+body{
+  background: var(--bg-base) !important;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Blob kiri-atas — sangat besar agar menutup area tengah */
+body::before{
+  content: "";
+  position: fixed;
+  left: -40vw;
+  top: -30vh;
+  width: 160vmax;
+  height: 120vmax;
+  background: radial-gradient(circle at 30% 30%, var(--blob-a), transparent 45%);
+  filter: blur(var(--blob-blur-large));
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  animation: blobA var(--blob-duration-a) ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* Blob kanan-atas — besar & lembut, tidak menumpuk di tengah */
+body::after{
+  content: "";
+  position: fixed;
+  right: -40vw;
+  top: -10vh;
+  width: 140vmax;
+  height: 110vmax;
+  background: radial-gradient(circle at 70% 20%, var(--blob-b), transparent 48%);
+  filter: blur(calc(var(--blob-blur-large) * 0.85));
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  animation: blobB var(--blob-duration-b) ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* gerakan halus */
+@keyframes blobA {
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(4vw,3vh,0) scale(1.02); }
+  100% { transform: translate3d(0,0,0) scale(1); }
+}
+@keyframes blobB {
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(-4vw,4vh,0) scale(1.015); }
+  100% { transform: translate3d(0,0,0) scale(1); }
+}
+
+/* pastikan konten ada di atas blobs */
+.header-inner,
+.site-main,
+.card,
+project-card,
+.lightbox-panel {
+  position: relative;
+  z-index: 2;
+}
+
+/* hormati prefer-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* =========================
+   Clean single background block
+   - Hapus duplikat / puing background sebelumnya
+   - Satu :root untuk variabel background saja
+   - Dua pseudo-elements halus, respect prefers-reduced-motion
+   ========================= */
+:root{
+  --bg-base: #040517;
+  --bg-shade-top: rgba(8,10,20,0.55);
+  --bg-bottom-shade: rgba(3,6,12,0.78);
+
+  --bg-blob-1: rgba(124,92,255,0.12);
+  --bg-blob-2: rgba(0,212,255,0.08);
+
+  --bg-blob-blur: 120px;
+  --bg-blob-dur-a: 18s;
+  --bg-blob-dur-b: 26s;
+  --bg-ease: cubic-bezier(.2,.9,.2,1);
+}
+
+/* Base background (subtle gradient + faint radial accents) */
+body{
+  background-color: var(--bg-base) !important;
+  background-image:
+    radial-gradient(circle at 12% 14%, rgba(125, 92, 255, 0.593), transparent 18%),
+    radial-gradient(circle at 88% 30%, rgba(0, 213, 255, 0.378), transparent 20%),
+    linear-gradient(180deg, var(--bg-shade-top), var(--bg-bottom-shade));
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Two large, soft animated blobs via pseudo-elements */
+body::before,
+body::after{
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform, opacity;
+  filter: blur(var(--bg-blob-blur));
+  mix-blend-mode: screen;
+  opacity: 0.10;
+}
+
+/* left / top blob */
+body::before{
+  left: -32vw;
+  top: -22vh;
+  width: 160vmax;
+  height: 120vmax;
+  background: radial-gradient(circle at 30% 30%, var(--bg-blob-1), transparent 48%);
+  animation: bgBlobA var(--bg-blob-dur-a) var(--bg-ease) infinite both;
+}
+
+/* right / upper blob */
+body::after{
+  right: -30vw;
+  top: -12vh;
+  width: 150vmax;
+  height: 110vmax;
+  background: radial-gradient(circle at 70% 20%, var(--bg-blob-2), transparent 50%);
+  animation: bgBlobB var(--bg-blob-dur-b) var(--bg-ease) infinite both;
+}
+
+/* Gentle movement */
+@keyframes bgBlobA{
+  0%   { transform: translate3d(0,0,0) scale(1); opacity:0.095; }
+  50%  { transform: translate3d(4vw,3vh,0) scale(1.02); opacity:0.12; }
+  100% { transform: translate3d(0,0,0) scale(1); opacity:0.095; }
+}
+@keyframes bgBlobB{
+  0%   { transform: translate3d(0,0,0) scale(1); opacity:0.09; }
+  50%  { transform: translate3d(-4vw,4vh,0) scale(1.015); opacity:0.11; }
+  100% { transform: translate3d(0,0,0) scale(1); opacity:0.09; }
+}
+
+/* Respect reduced-motion */
+@media (prefers-reduced-motion: reduce){
+  body::before, body::after { animation: none !important; transition: none !important; }
+}
+
+/* Ensure content sits above background */
+.header-inner,
+.site-main,
+.card,
+project-card,
+.lightbox-panel {
+  position: relative;
+  z-index: 2;
+}
+
+/* Section titles entrance (fade + lift) */
+.section-subtitle{
+  opacity: 0;
+  transform: translateY(8px) scale(.995);
+  will-change: transform, opacity;
+  transition: opacity 520ms var(--enter-ease, cubic-bezier(.2,.9,.2,1)),
+              transform 520ms var(--enter-ease, cubic-bezier(.2,.9,.2,1));
+  transition-delay: calc(var(--i, 0) * var(--enter-stagger, 80ms));
+  display: inline-block; /* keep transform contained */
+}
+
+/* ensure subsection label (h3) uses same animation */
+.projects-subsection .section-subtitle{
+  display:inline-block;
+}
+
+/* when loaded, reveal titles */
+body.loaded .section-subtitle{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Align only the RESULTS section title to the left */
+#results .projects-subsection{
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left; /* fallback */
+  margin: .6rem 0;
+  padding-left: 0.5rem; /* kecil indent agar tidak menempel ke tepi */
+}
+
+#results .projects-subsection .section-subtitle{
+  display: inline-block;
+  margin: 0;
+  padding: .35rem .75rem;
+}
+
+/* Judul subsection:
+   - #results tetap kiri (sudah ada override)
+   - semua judul subsection lain (contoh: On Job Training, 3D Render) tampil di tengah
+   - beri gradient text mirip Portofolio (fallback warna disertakan)
+*/
+.projects-subsection{
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center; /* center by default */
+  align-items: center;
+  text-align: center;
+  margin: .6rem 0;
+}
+
+/* gradient text for centered subsection titles */
+.projects-subsection .section-subtitle{
+  display: inline-block;
+  padding: .35rem .75rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c5cff 0%, #00d4ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+/* RESULT override: left aligned and plain white */
+#results .projects-subsection{
+  justify-content: flex-start;
+  text-align: left;
+  padding-left: 0.5rem;
+}
+#results .projects-subsection .section-subtitle{
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* === Fix: separate RESULTS (left/plain) from other subsection titles (center/gradient) === */
+/* Default for subsections inside #results: center (override earlier broad rules) */
+#results .projects-subsection {
+  justify-content: center;
+  text-align: center;
+  padding-left: 0;
+}
+
+/* First subsection inside #results = the "RESULTS" title -> left, plain white */
+#results > .projects-subsection:first-of-type {
+  justify-content: flex-start;
+  text-align: left;
+  padding-left: 0.5rem;
+}
+#results > .projects-subsection:first-of-type .section-subtitle {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Any other subsection inside #results (e.g. On Job Training, 3D Render) -> centered with gradient */
+#results > .projects-subsection:not(:first-of-type) {
+  justify-content: center;
+  text-align: center;
+  padding-left: 0;
+}
+.subtitle-grad {
+  background: linear-gradient(90deg, #7c5cff 0%, #00d4ff 60%, #8be9d8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+  display: inline-block;
+  padding: .35rem .75rem;
+  border-radius: 999px;
+  font-size: 25px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.18); /* opsional: sedikit kontras */
+}
+/* fallback: pastikan general centered subsection style tetap tidak terpengaruh */
+#results > .projects-subsection:not(:first-of-type) {
+  justify-content: center;
+  text-align: center;
+}
+#results > .projects-subsection:first-of-type .section-subtitle {
+  /* tetap putih untuk RESULTS */
+  background: none !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Small-screen tweak */
+@media (max-width:700px){
+  #results > .projects-subsection:first-of-type { padding-left: .75rem; }
+}

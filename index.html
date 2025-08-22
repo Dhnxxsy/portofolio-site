@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portofolio — Raga Kalas Ramadhan</title>
+
+  <!-- Font modern -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* fallback animation (tidak perlu diubah) */
+    .fade-in { opacity: 0; transform: translateY(12px); animation: fadeInUp .9s ease-out forwards; }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="theme-dark">
+
+  <header class="header-con fade-in" role="banner">
+    <div class="header-inner">
+      <div class="brand">
+        <h1 class="portofolio">PORTOFOLIO</h1>
+        <p class="subtext">Junior Graphic Designer • 3D Artist • Editor</p>
+      </div>
+
+      <nav class="navbar" aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#results">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    <section id="about" class="section card glass fade-in">
+      <div class="about-inner">
+        <h2>INTRODUCE</h2>
+        <p>My name is Raga Kalas Ramadhan, commonly known as Raga. I graduated in 2025 from a Vocational High School majoring in Visual Communication Design, with three years of practical experience in graphic design and multimedia editing. I have demonstrated strong leadership as the Head of the school's Creative Team, successfully managing projects and guiding the team in producing visual content for official events and internal publications.</p>
+      </div>
+    </section>
+
+    <section id="results" class="section">
+      <!-- RESULTS (kiri, plain white) -->
+      <div class="projects-subsection" style="grid-column:1 / -1; margin:.6rem 0;">
+        <h2 class="section-subtitle">RESULTS</h2>
+      </div>
+
+      <!-- Grid container -->
+      <div class="projects-grid">
+        <!-- Subsection: On Job Training (centered) -->
+        <div class="projects-subsection">
+          <h3 class="subtitle-grad">On Job Training — Mandiri Digital Universe</h3>
+        </div>
+
+        <!-- Card 1 -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_1.png" alt="Carousell Design">
+            <div class="shine"></div>
+            <button class="cta" type="button" data-title="Carousell Design" data-desc="Desain carousel untuk kampanye digital, fokus pada layout, tipografi, dan konsistensi merek.">View</button>
+          </div>
+          <div class="project-caption">Carousell Design - On Job Training Mandiri Digital Universe</div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="Assets/Carousel/Steam Autumn Sale.jpg" alt="Steam Autumn Sale">
+            <div class="shine"></div>
+            <button class="cta" type="button" data-title="Steam Autumn Sale" data-desc="Poster promo bertema musim gugur dibuat untuk event penjualan — bermain dengan warna hangat dan hierarki visual.">View</button>
+          </div>
+          <div class="project-caption">Promotional Poster — Steam Autumn Sale</div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_1.png" alt="Cara merawat laptop">
+            <div class="shine"></div>
+            <button class="cta" type="button" data-title="Cara Merawat Laptop" data-desc="Infografis carousel berisi tips perawatan laptop agar awet; fokus pada ilustrasi sederhana dan tip cepat.">View</button>
+          </div>
+          <div class="project-caption">Infografis Tips — Perawatan Laptop</div>
+        </article>
+
+        <!-- Subsection: Preview — 3D Renders (centered) -->
+        <div class="projects-subsection">
+          <h3 class="subtitle-grad">Preview — 3D Renders</h3>
+        </div>
+
+        <!-- Card 4 (copy) -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="Assets/3D Render/Blender Color Correctionc2.png"alt="3D Interior Render">
+            <div class="shine"></div>
+            <button class="cta" type="button" data-title="3D Interior Render" data-desc="Render interior living room dengan pencahayaan alami dan material tekstur realistis.">View</button>
+          </div>
+          <div class="project-caption">3D — Interior Render (Living Room)</div>
+        </article>
+
+        <!-- Card 5 (copy) -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="Assets/3D Render/MetroMini CC.png" alt="3D Product Render">
+            <div class="shine"></div>
+            <button class="cta" type="button" data-title="3D Product Render" data-desc="Render produk kamera konsep dengan fokus detail bahan dan pencahayaan studio.">View</button>
+          </div>
+          <div class="project-caption">3D — Product Render (Camera Concept)</div>
+        </article>
+
+        <!-- Card 6 (copy) -->
+        <article class="project-card">
+          <div class="project-media">
+            <img src="Assets/3D Render/Train  E 2.png" alt="3D Environment Scene">
+            <div class="shine"></div>
+            <button class="cta" type="button" data-title="3D Environment" data-desc="Landscape sci‑fi dengan elemen atmosferik, depth, dan komposisi dramatis.">View</button>
+          </div>
+          <div class="project-caption">3D — Environment (Sci‑Fi Landscape)</div>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="section card glass fade-in">
+      <h2>- CONTACT -</h2>
+      <p>Email: ragakalasramadhan27@gmail.com • IG: raa.insidee</p>
+    </section>
+  </main>
+
+  <!-- Modal / Lightbox (ganti dengan markup slider) -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lightbox-backdrop" data-close></div>
+
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-label="Preview image">
+      <button class="lightbox-close" aria-label="Tutup">&times;</button>
+
+      <!-- prev / next -->
+      <button class="lightbox-nav lightbox-prev" aria-label="Sebelumnya">‹</button>
+      <button class="lightbox-nav lightbox-next" aria-label="Berikutnya">›</button>
+
+      <div class="lightbox-body">
+        <!-- slider: track akan diisi oleh JS -->
+        <div class="lightbox-slider">
+          <div class="lightbox-track" role="list"></div>
+        </div>
+
+        <div class="lightbox-info">
+          <h3 class="lightbox-title"></h3>
+          <div class="lightbox-desc" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
