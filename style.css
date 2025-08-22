@@ -19,6 +19,10 @@
   --shadow-strong: 0 18px 44px rgba(2,6,23,0.45);
 }
 
+/* Global anti-overflow (tanpa ubah tampilan) */
+html, body{ max-width:100%; overflow-x:hidden }
+
+
 /* Reset & base */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -64,6 +68,9 @@ img{max-width:100%;height:auto;display:block}
   overflow:visible;
   transition:transform var(--trans-fast) ease, box-shadow var(--trans-fast) ease;
   display:block;
+  /* Perf: delay rendering offscreen cards (tanpa ubah tampilan) */
+  content-visibility:auto;
+  contain-intrinsic-size: 320px 420px; /* perkiraan tinggi untuk menghindari layout shift besar */
 }
 
 /* Project media container (image wrapper) */
@@ -315,6 +322,21 @@ body.loaded .project-media img{
   .projects-grid{gap:calc(var(--gap) * 0.9)}
   /* caption panjang tidak memaksa layout melar */
   .project-caption{word-wrap:break-word; overflow-wrap:anywhere}
+  /* Lightbox lebih sempit di mobile agar tidak overflow */
+  .lightbox-panel{width:100%}
+  .lightbox-body{grid-template-columns:1fr}
+}
+
+/* Mobile performance tuning tanpa mengubah tampilan akhir */
+@media (max-width:480px){
+  /* hentikan animasi background blob agar hemat baterai/GPU */
+  body::before, body::after { animation: none !important; }
+  /* efek shine dan hover berat dinonaktifkan di touch device */
+  .project-media .shine{ display:none; }
+  .project-media::after{ display:none; }
+  .project-media img{ transition: none; }
+  /* backdrop blur berat diganti solid untuk performa */
+  .lightbox-backdrop{ backdrop-filter:none; background:rgba(2,6,23,0.82) }
 }
 
 /* Very small devices safeguard */
@@ -373,6 +395,12 @@ body{
   position: relative;
   overflow-x: hidden;
 }
+
+/* Pastikan section tidak melebar melebihi viewport */
+.section{ box-sizing:border-box; max-width:100% }
+
+/* Contact text wrapping agar tidak memicu horizontal scroll */
+#contact p{ overflow-wrap:anywhere; word-break:break-word }
 
 /* Two large, soft animated blobs via pseudo-elements */
 body::before,
