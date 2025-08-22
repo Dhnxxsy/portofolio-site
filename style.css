@@ -460,22 +460,25 @@ body{
   border: 1px solid rgba(255,255,255,0.05);
 }
 
-.contact-header{ display:flex; align-items:center; gap:12px; }
+.contact-header{ display:flex; align-items:center; gap:12px; flex-wrap: nowrap; }
 .avatar{
   width: 56px; height:56px; /* sedikit lebih besar agar terlihat rapi */
-  aspect-ratio: 1 / 1; /* jaga rasio 1:1 agar bulat sempurna */
+  /* Hindari bug aspect-ratio di Chrome Android: kunci ukuran via flex-basis */
   border-radius:50%;
-  display:inline-block; /* hindari anomali layout pada picture */
-  flex: 0 0 auto; /* cegah mengecil di flex container (mobile) */
+  display:flex; /* pastikan konten mengisi penuh wrapper */
+  align-items:stretch; justify-content:stretch;
+  flex: 0 0 56px; /* kunci lebar item flex */
   min-width: 56px; /* pastikan tidak menjadi oval saat menyempit */
   min-height: 56px;
+  position: relative; /* untuk absolut anak */
+  isolation: isolate; /* hindari efek eksternal */
   line-height: 0; /* hilangkan whitespace internal */
   background: linear-gradient(135deg, #7c5cff 0%, #00d4ff 100%);
   box-shadow: 0 8px 24px rgba(0,0,0,.35);
   overflow: hidden; /* pastikan gambar terpotong dalam lingkaran */
 }
-.avatar picture{ display:block; width:100%; height:100% }
-.avatar img{ width:100%; height:100%; object-fit:cover; object-position:50% 7%; display:block; border-radius:inherit }
+.avatar picture{ display:block; width:100%; height:100%; position:absolute; inset:0 }
+.avatar img{ width:100%; height:100%; object-fit:cover; object-position:50% 7%; display:block; border-radius:inherit; position:absolute; inset:0; transform: translateZ(0) }
 .contact-text{ display:flex; flex-direction:column; gap:2px }
 .contact-title{ margin:0; font-size:1.05rem; color:var(--text) }
 .contact-subtitle{ margin:0; color:var(--muted); font-size:.95rem }
@@ -532,7 +535,7 @@ body{
 
 @media (min-width: 720px){
   .contact-card{ padding: 20px; gap: 18px }
-  .avatar{ width: 64px; height:64px; min-width:64px; min-height:64px; }
+  .avatar{ width: 64px; height:64px; min-width:64px; min-height:64px; flex-basis:64px; }
   .contact-title{ font-size:1.15rem }
 }
 
