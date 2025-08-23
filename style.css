@@ -1,6 +1,17 @@
 /* =========================
    Clean & fixed CSS
    ========================= */
+/* ================= Panduan Cepat (Bahasa Indonesia) =================
+   - Ubah warna/tema global di :root (variabel --accent, --text, dll.)
+   - Atur kolom grid proyek di bagian "Responsive" (@media min-width)
+   - Efek hover kartu & tombol ada di .project-card:hover dan .cta:hover
+   - Lightbox: tampilan dikontrol CSS, jumlah tombol/dots disembunyikan otomatis oleh JS bila slide <= 1
+   - Tombol View:
+       * data-gallery -> galeri per-kartu (multi gambar)
+       * tanpa data-gallery -> slide antar-kartu per-subsection
+       * data-single="true" -> hanya 1 gambar (tanpa prev/next/dots)
+   - Tidak perlu mengubah CSS untuk mode single; JS yang mengatur visibilitas kontrol.
+==================================================================== */
 :root{
   --bg-top: #071024;
   --bg-bottom: #0b1830;
@@ -59,7 +70,9 @@ img{max-width:100%;height:auto;display:block}
 .section{padding:0;}
 .card{background:var(--card-bg);border-radius:var(--radius);padding:1rem;border:1px solid rgba(255,255,255,0.05)}
 
-/* Projects grid */
+/* Projects grid
+   - Default 1 kolom, berubah via breakpoint di bawah (Responsive)
+   - Ubah gap antar kartu dengan variabel --gap */
 .projects-grid{display:grid;grid-template-columns:1fr;gap:var(--gap)}
 
 /* Project card base */
@@ -109,7 +122,9 @@ img{max-width:100%;height:auto;display:block}
   transition:opacity 260ms ease;
 }
 
-/* CTA button centered */
+/* CTA button centered
+   - Tombol .cta muncul saat hover/focus pada kartu (lihat rules .project-card:hover/.focus-within)
+   - Mode non-lightbox (mis. data-nolightbox) dikendalikan oleh JS; CSS ini tetap sama */
 .project-media .cta{
   position:absolute;
   left:50%; top:50%;
@@ -217,7 +232,10 @@ body.loaded .project-media img{
   margin-top:.6rem;
 }
 
-/* ========== Lightbox / Modal ========== */
+/* ========== Lightbox / Modal ==========
+   Catatan:
+   - Prev/Next (.lightbox-nav) dan .lightbox-dots akan otomatis disembunyikan oleh JS saat jumlah slide <= 1
+   - Tidak perlu styling tambahan khusus untuk mode single */
 .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
 .lightbox[aria-hidden="false"]{display:flex}
 .lightbox-backdrop{position:absolute;inset:0;background:rgba(2,6,23,0.7);backdrop-filter:blur(4px)}
@@ -228,6 +246,29 @@ body.loaded .project-media img{
 .lightbox-track { display:flex; width:100%; height:100%; transition: transform .36s cubic-bezier(.2,.9,.2,1); }
 .lightbox-track .slide { flex: 0 0 100%; display:grid; place-items:center; padding:12px; box-sizing:border-box; }
 .lightbox-track .slide img { width:100%; height:100%; object-fit:contain; border-radius:8px; max-height:70vh; }
+
+/* dots indicators */
+.lightbox-dots{
+  position:absolute;
+  left:50%; bottom:10px;
+  transform:translateX(-50%);
+  display:flex; align-items:center; gap:8px;
+  padding:6px 8px;
+  border-radius:999px;
+  background: rgba(2,6,23,0.45);
+  backdrop-filter: blur(4px);
+  z-index:3;
+}
+.lightbox-dots button{
+  width:8px; height:8px;
+  border-radius:50%;
+  border:0; padding:0;
+  background: rgba(255,255,255,0.55);
+  cursor:pointer;
+  transition: transform 140ms ease, background 140ms ease;
+}
+.lightbox-dots button:hover{ transform: scale(1.15) }
+.lightbox-dots button[aria-selected="true"]{ background:#ffffff; transform: scale(1.2) }
 
 /* nav buttons */
 .lightbox-nav {

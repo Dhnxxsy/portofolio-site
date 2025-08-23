@@ -19,6 +19,7 @@ console.info('script.js: cleaned duplicates/unused handlers (non-destructive).')
   const nextBtn = lightbox ? lightbox.querySelector('.lightbox-next') : null;
   const titleEl = lightbox ? lightbox.querySelector('.lightbox-title') : null;
   const descEl = lightbox ? lightbox.querySelector('.lightbox-desc') : null;
+  const dotsEl = lightbox ? lightbox.querySelector('.lightbox-dots') : null;
 
   function groupsFromContainer(container){
     const groups = [];
@@ -46,6 +47,33 @@ console.info('script.js: cleaned duplicates/unused handlers (non-destructive).')
 
   let currentGroup = [];
   let currentIndex = 0;
+  function setControlsVisibility(count){
+    const show = count > 1;
+    if(prevBtn) prevBtn.style.display = show ? '' : 'none';
+    if(nextBtn) nextBtn.style.display = show ? '' : 'none';
+    if(dotsEl) dotsEl.style.display = show ? '' : 'none';
+  }
+  function buildDots(count){
+    if(!dotsEl) return;
+    dotsEl.innerHTML = '';
+    for(let i=0;i<count;i++){
+      const b = document.createElement('button');
+      b.setAttribute('type','button');
+      b.setAttribute('role','tab');
+      b.setAttribute('aria-label', `Go to slide ${i+1}`);
+      b.dataset.idx = String(i);
+      if(i===0) b.setAttribute('aria-selected','true');
+      dotsEl.appendChild(b);
+    }
+  }
+  function updateDots(i){
+    if(!dotsEl) return;
+    const buttons = Array.from(dotsEl.querySelectorAll('button'));
+    buttons.forEach((b,idx)=>{
+      if(idx===i){ b.setAttribute('aria-selected','true'); }
+      else { b.removeAttribute('aria-selected'); }
+    });
+  }
   function buildSlides(items){
     if(!track) return;
     // Perf: gunakan decoding async; slide non-aktif lazy-load untuk kurangi beban awal
@@ -53,6 +81,8 @@ console.info('script.js: cleaned duplicates/unused handlers (non-destructive).')
       const lazy = idx === 0 ? '' : ' loading="lazy"';
       return `<div class="slide" role="listitem"><img src="${it.src}" alt="${it.alt||''}" decoding="async"${lazy}></div>`;
     }).join('');
+    buildDots(items.length);
+    setControlsVisibility(items.length);
   }
   function showIndex(i, animate = true){
     if(!track || !currentGroup.length) return;
@@ -64,6 +94,7 @@ console.info('script.js: cleaned duplicates/unused handlers (non-destructive).')
     track.style.transform = `translateX(-${currentIndex * 100}%)`;
     if(titleEl) titleEl.textContent = currentGroup[currentIndex].title || '';
     if(descEl) descEl.textContent = currentGroup[currentIndex].desc || '';
+    updateDots(currentIndex);
   }
   function openAt(idx){
     showIndex(idx, false);
@@ -86,9 +117,35 @@ console.info('script.js: cleaned duplicates/unused handlers (non-destructive).')
     document.addEventListener('click', e => {
       const btn = e.target.closest('.cta');
       if(!btn) return;
+      // Untuk tombol View yang hanya tampilan (tanpa lightbox)
+      if(btn.hasAttribute('data-nolightbox')) return;
       e.preventDefault();
       const card = btn.closest('.project-card');
       const container = btn.closest('.projects-grid') || containers[0];
+      // 0) Mode single: buka hanya gambar dalam kartu ini, tanpa navigasi
+      if(btn.hasAttribute('data-single')){
+        const img = card?.querySelector('.project-media img');
+        const title = btn?.dataset.title || card?.querySelector('.project-caption')?.textContent.trim() || img?.alt || '';
+        const desc = btn?.dataset.desc || '';
+        currentGroup = [{ src: img?.src || '', alt: img?.alt || '', title, desc, el: card }];
+        buildSlides(currentGroup);
+        openAt(0);
+        return;
+      }
+      // 1) Prioritas: jika tombol memiliki data-gallery, gunakan itu sebagai sumber slide
+      const galleryAttr = btn.getAttribute('data-gallery');
+      if(galleryAttr){
+        const title = btn?.dataset.title || card?.querySelector('.project-caption')?.textContent.trim() || '';
+        const desc = btn?.dataset.desc || '';
+        const alt = card?.querySelector('.project-media img')?.alt || title || '';
+        const urls = galleryAttr.split(',').map(s => s.trim()).filter(Boolean);
+        currentGroup = urls.map(u => ({ src: u, alt, title, desc, el: card }));
+        buildSlides(currentGroup);
+        openAt(0);
+        return;
+      }
+
+      // 2) Jika tidak ada data-gallery, fallback ke grouping per-subsection (perilaku lama)
       const groups = map.get(container) || groupsFromContainer(container);
       let found = false;
       for(let g=0; g<groups.length; g++){
@@ -125,6 +182,14 @@ console.info('script.js: cleaned duplicates/unused handlers (non-destructive).')
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
     if(prevBtn) prevBtn.addEventListener('click', ()=> showIndex(currentIndex - 1));
     if(nextBtn) nextBtn.addEventListener('click', ()=> showIndex(currentIndex + 1));
+    if(dotsEl){
+      dotsEl.addEventListener('click', e=>{
+        const target = e.target.closest('button[data-idx]');
+        if(!target) return;
+        const idx = parseInt(target.dataset.idx, 10);
+        if(Number.isInteger(idx)) showIndex(idx);
+      });
+    }
 
     document.addEventListener('keydown', e=>{
       if(!lightbox || lightbox.getAttribute('aria-hidden') === 'true') return;
