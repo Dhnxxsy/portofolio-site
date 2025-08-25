@@ -11,11 +11,32 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.min.css" />
   <style>
     /* fallback animation (tidak perlu diubah) */
     .fade-in { opacity: 0; transform: translateY(12px); animation: fadeInUp .9s ease-out forwards; }
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    /* Override: remove entrance stagger delay after load so hover is instant */
+    body.loaded .project-card{ transition-delay: 0ms !important; }
+    body.loaded .project-media img{ transition-delay: 0ms !important; }
+    body.loaded .project-caption{ transition-delay: 0ms !important; }
+    /* Override: force-remove any underline/border styles on contact links */
+    .contact-info a,
+    .contact-info a:link,
+    .contact-info a:visited,
+    .contact-info a:hover,
+    .contact-info a:active{
+      text-decoration: none !important;
+      text-decoration-color: transparent !important;
+      text-decoration-style: solid !important;
+      border-bottom: 0 !important;
+      outline: none !important;
+    }
+    /* Inline: ensure icons show and hover color applies (overrides any external CSS) */
+    .contact-email::before{ content: "✉️"; margin-right: 8px; }
+    .contact-ig::before{ content: "📷"; margin-right: 8px; }
+    .contact-info a{ transition: color 160ms ease !important; }
+    .contact-info a:hover{ color: var(--accent, #6ea8ff) !important; }
   </style>
 </head>
 <body class="theme-dark">
@@ -76,7 +97,7 @@
         <!-- Card 1 | Contoh kartu dengan GALERI per-kartu (pakai data-gallery) -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_1.webp" /><img  src="Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_1.png" alt="Carousell Design" loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_1.webp" /><img  src="Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_1.png" alt="Carousell Design" loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
             <button class="cta" type="button" data-title="Detail" data-desc="Topic: Software Recommendation For Youtuber. This content aims to inform about the software commonly used by YouTubers/content creators in creating content." data-gallery="Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_1.webp, Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_2.webp, Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_3.webp">View</button>
           </div>
@@ -86,7 +107,7 @@
         <!-- Card 2 | Contoh kartu dengan GALERI per-kartu (pakai data-gallery) -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_1.webp" /><img  src="Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_1.png" alt="Steam Autumn Sale" loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_1.webp" /><img  src="Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_1.png" alt="Steam Autumn Sale" loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
             <button class="cta" type="button" data-title="Detail" data-desc="Topic: Why Blender 3D has become the most favored modeling software. Aimed at informing about the advantages of 3D blender, so it can become one of the most favored 3D modeling software." data-gallery="Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_1.webp, Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_2.webp, Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_3.webp, Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_4.webp, Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_5.webp">View</button>
           </div>
@@ -96,7 +117,7 @@
         <!-- Card 3 | Contoh kartu dengan GALERI per-kartu (pakai data-gallery) -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_1.webp" /><img  src="Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_1.png" alt="Cara merawat laptop" loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_1.webp" /><img  src="Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_1.png" alt="Cara merawat laptop" loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
             <button class="cta" type="button" data-title="Detail" data-desc="Topic: How To Maintain a Laptop. This content aims to inform users on how to properly maintain and care for their laptops." data-gallery="Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_1.webp, Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_2.webp, Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_3.webp, Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_4.webp, Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_5.webp">View</button>
           </div>
@@ -106,7 +127,7 @@
         <!-- Card 4 (OJT extra) | Mode SINGLE (data-single) -> tampil 1 gambar saja di lightbox, tanpa navigasi -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_2.webp" /><img  src="Assets/Posters/Flayer 17 Agustus 2024 revisi.webp" alt="Poster Design HUT RI ke-79" loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 3/Software yang sering digunakan oleh youtuber_Page_2.webp" /><img  src="Assets/Posters/Flayer 17 Agustus 2024 revisi.webp" alt="Poster Design HUT RI ke-79" loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
             <button class="cta" type="button" data-single="true" data-title="Detail" data-desc="This poster design is intended to celebrate Indonesia's independence day. The colors emphasized in this poster are red and white. Red symbolizes courage, while white symbolizes purity. Red and white are also the colors of the national emblem of Indonesia.">View</button>
           </div>
@@ -116,7 +137,7 @@
         <!-- Card 5 (OJT extra) | Mode SINGLE (data-single) -> tampil 1 gambar saja di lightbox, tanpa navigasi -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_2.webp" /><img  src="Assets/Posters/Hari Kesaktian Pancasila MDU REV (SMK YAPIMDA).webp" alt="Hari Kesaktian Pancasila" loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 2/Alasan blender 3d menjadi pilihan_Page_2.webp" /><img  src="Assets/Posters/Hari Kesaktian Pancasila MDU REV (SMK YAPIMDA).webp" alt="Hari Kesaktian Pancasila" loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
             <button class="cta" type="button" data-single="true" data-title="Detail" data-desc="This poster design is intended to welcome Pancasila Day. Pancasila is the foundation of the state and the ideology of the Indonesian nation, consisting of five principles that serve as guidelines in national life and governance. The red and white colors in this poster symbolize Bravery and Purity.">View</button>
           </div>
@@ -126,7 +147,7 @@
         <!-- Card 6 (OJT extra) | Mode SINGLE (data-single) -> tampil 1 gambar saja di lightbox, tanpa navigasi -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_2.webp" /><img  src="Assets/Posters/Maulid Nabi Muhammad MDU Raga Kalas Ramadhan.webp" alt="Maulid Nabi Muhammad SAW." loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/Carousel/Carousel 1/Cara agar laptop tidak cepat rusak_Page_2.webp" /><img  src="Assets/Posters/Maulid Nabi Muhammad MDU Raga Kalas Ramadhan.webp" alt="Maulid Nabi Muhammad SAW." loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
             <button class="cta" type="button" data-single="true" data-title="Detail" data-desc="This poster design is intended to commemorate the birth of the Prophet Muhammad SAW. The Prophet Muhammad SAW’s birthday celebration is a religious event for Muslims in Indonesia, held annually to honor the birth of the Prophet Muhammad SAW. The combination of blue and white in the design aims to convey a sense of simplicity, purity, and elegance.">View</button>
           </div>
@@ -141,7 +162,7 @@
         <!-- Card 4 (copy) | Contoh kartu tanpa data-gallery -> slide antar-kartu di subsection 3D Renders -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/3D Render/Blender Color Correctionc2.webp" /><img  src="Assets/3D Render/Blender Color Correctionc2.png" alt="3D Interior Render" loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/3D Render/Blender Color Correctionc2.webp" /><img  src="Assets/3D Render/Blender Color Correctionc2.png" alt="3D Interior Render" loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
             <button class="cta" type="button" data-title="3D Interior Render" data-desc="Render interior living room dengan pencahayaan alami dan material tekstur realistis.">View</button>
           </div>
@@ -151,7 +172,7 @@
         <!-- Card 5 (copy) | Contoh kartu tanpa data-gallery -> slide antar-kartu di subsection 3D Renders -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/3D Render/MetroMini CC.webp" /><img  src="Assets/3D Render/MetroMini CC.png" alt="3D Product Render" loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/3D Render/MetroMini CC.webp" /><img  src="Assets/3D Render/MetroMini CC.png" alt="3D Product Render" loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
             <button class="cta" type="button" data-title="3D Product Render" data-desc="Render produk kamera konsep dengan fokus detail bahan dan pencahayaan studio.">View</button>
           </div>
@@ -161,7 +182,7 @@
         <!-- Card 6 (copy) | Contoh kartu tanpa data-gallery -> slide antar-kartu di subsection 3D Renders -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/3D Render/Train  E 2.webp" /><img  src="Assets/3D Render/Train  E 2.png" alt="3D Environment Scene" loading="lazy" decoding="async" width="900" height="900"></picture>
+            <picture><source type="image/webp" srcset="Assets/3D Render/Train  E 2.webp" /><img  src="Assets/3D Render/Train  E 2.png" alt="3D Environment Scene" loading="lazy" decoding="async" fetchpriority="low" width="900" height="900"></picture>
             <div class="shine"></div>
             <button class="cta" type="button" data-title="3D Environment" data-desc="Landscape sci-fi dengan elemen atmosferik, depth, dan komposisi dramatis.">View</button>
           </div>
@@ -176,31 +197,31 @@
         <!-- Card example di Poster Design (tanpa data-gallery) -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/3D Render/Blender Color Correctionc2.webp" /><img  src="Assets/3D Render/Blender Color Correctionc2.png" alt="3D Interior Render" loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/Posters/POSTER RAMADHAN.webp" /><img  src="Assets/Posters/POSTER RAMADHAN.png" alt="Poster Ramadhan" loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
-            <button class="cta" type="button" data-title="3D Interior Render" data-desc="Render interior living room dengan pencahayaan alami dan material tekstur realistis.">View</button>
+            <button class="cta" type="button" data-title="Detail" data-desc="Render interior living room dengan pencahayaan alami dan material tekstur realistis.">View</button>
           </div>
-          <div class="project-caption">3D - Interior Render (Living Room)</div>
+          <div class="project-caption">Poster Design Ramadhan</div>
         </article>
 
         <!-- Card example di Poster Design (tanpa data-gallery) -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/3D Render/MetroMini CC.webp" /><img  src="Assets/3D Render/MetroMini CC.png" alt="3D Product Render" loading="lazy" decoding="async" width="1080" height="1080"></picture>
+            <picture><source type="image/webp" srcset="Assets/Posters/PPDB SMK YAPIMDA.webp" /><img  src="Assets/Posters/PPDB SMK YAPIMDA.png" alt="Poster PPDB" loading="lazy" decoding="async" fetchpriority="low" width="1080" height="1080"></picture>
             <div class="shine"></div>
-            <button class="cta" type="button" data-title="3D Product Render" data-desc="Render produk kamera konsep dengan fokus detail bahan dan pencahayaan studio.">View</button>
+            <button class="cta" type="button" data-title="Detail" data-desc="Render produk kamera konsep dengan fokus detail bahan dan pencahayaan studio.">View</button>
           </div>
-          <div class="project-caption">3D - Product Render (Camera Concept)</div>
+          <div class="project-caption">Poster Design - PPDB SMK Yapimda</div>
         </article>
 
         <!-- Card example di Poster Design (tanpa data-gallery) -->
         <article class="project-card">
           <div class="project-media">
-            <picture><source type="image/webp" srcset="Assets/3D Render/Train  E 2.webp" /><img  src="Assets/3D Render/Train  E 2.png" alt="3D Environment Scene" loading="lazy" decoding="async" width="900" height="900"></picture>
+            <picture><source type="image/webp" srcset="Assets/Posters/Poster Idul Adha Raga Kalas R.webp" /><img  src="Assets/Posters/Poster Idul Adha Raga Kalas R.png" alt="Poster Design Idul Adha" loading="lazy" decoding="async" fetchpriority="low" width="900" height="900"></picture>
             <div class="shine"></div>
-            <button class="cta" type="button" data-title="3D Environment" data-desc="Landscape sci-fi dengan elemen atmosferik, depth, dan komposisi dramatis.">View</button>
+            <button class="cta" type="button" data-title="Detail" data-desc="Landscape sci-fi dengan elemen atmosferik, depth, dan komposisi dramatis.">View</button>
           </div>
-          <div class="project-caption">3D - Environment (Sci-Fi Landscape)</div>
+          <div class="project-caption">Poster Design - Eid Al-Adha</div>
         </article>
       </div>
       
@@ -213,7 +234,7 @@
           <div class="avatar">
             <picture>
               <source type="image/webp" srcset="Assets/Raga Kalas R 3x4.webp" />
-              <img src="Assets/Raga Kalas R 3x4.png" alt="Raga Kalas Ramadhan" width="120" height="120" loading="lazy" decoding="async" />
+              <img src="Assets/Raga Kalas R 3x4.png" alt="Raga Kalas Ramadhan" width="120" height="120" loading="lazy" decoding="async" fetchpriority="low" />
             </picture>
           </div>
           <div class="contact-text">
@@ -229,7 +250,11 @@
           <a class="btn btn-ghost" href="https://instagram.com/raa.insidee" target="_blank" rel="noopener" aria-label="Open Instagram profile">Instagram</a>
         </div>
 
-        <div class="contact-info">Email: <a href="mailto:ragakalasramadhan27@gmail.com">ragakalasramadhan27@gmail.com</a> · IG: <a href="https://instagram.com/raa.insidee" target="_blank" rel="noopener">@raa.insidee</a></div>
+        <div class="contact-info">
+          <span class="contact-email">Email: <a href="mailto:ragakalasramadhan27@gmail.com">ragakalasramadhan27@gmail.com</a></span>
+          <span class="contact-sep" aria-hidden="true">|</span>
+          <span class="contact-ig">IG: <a href="https://instagram.com/raa.insidee" target="_blank" rel="noopener">@raa.insidee</a></span>
+        </div>
       </div>
     </section>
   </main>
@@ -267,6 +292,6 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.min.js"></script>
 </body>
 </html>
